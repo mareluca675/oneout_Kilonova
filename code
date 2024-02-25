@@ -1,0 +1,129 @@
+#include <fstream>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+
+using namespace std; 
+
+int n, c;
+int vec[1000001];
+int maxi;
+char lp[1000001];
+    
+int main()
+{
+    ifstream cin("oneout.in");
+    ofstream cout("oneout.out");
+    
+    cin >> c >> n;
+    
+    for(int i = 1; i <= n; i ++){
+        cin >> vec[i];
+        
+        if(vec[i] > maxi){
+            maxi = vec[i];
+        }
+    }
+    
+    for(int i = 4; i <= maxi; i ++){
+        if(sqrt(i) == (int)(sqrt(i))){
+            for(int j = 1; i * j <= maxi; j ++){
+                lp[i * j] = 1;
+            }
+        }
+    }
+    
+    if(c == 1){
+        int cnt = 0;
+        
+        for(int i = 1; i <= n; i ++){
+            if(!lp[vec[i]]){
+                cnt ++;
+            }
+        }
+        
+        cout << cnt;
+    }
+    else{
+        int secvmax = 0, nrsecvmax = 0;
+        
+        for(int i = 2; i <= n - 1; i ++){
+            if(lp[vec[i - 1]] == 0 and lp[vec[i]] == 1 and lp[vec[i + 1]] == 0){
+                int j = i;
+                int st = 0;
+                
+                while(lp[vec[--j]] == 0 and j >= 1){
+                    st ++;
+                }
+                
+                int dr = 0;
+                j = i;
+                
+                while(lp[vec[++j]] == 0 and j <= n){
+                    dr ++;
+                }
+                
+                if(dr + st > secvmax){
+                    secvmax = dr + st;
+                }
+            }
+        }
+        
+        for(int i = 2; i <= n - 1; i ++){
+            if(lp[vec[i - 1]] == 0 and lp[vec[i]] == 1 and lp[vec[i + 1]] == 0){
+                int j = i;
+                int st = 0;
+                
+                while(lp[vec[--j]] == 0 and j >= 1){
+                    st ++;
+                }
+                
+                int dr = 0;
+                j = i;
+                
+                while(lp[vec[++j]] == 0 and j <= n){
+                    dr ++;
+                }
+                
+                if(dr + st == secvmax){
+                    nrsecvmax ++;
+                }
+            }
+        }
+        
+        if(secvmax == 0){
+            cout << -1;
+        }
+        else{
+            cout << secvmax << ' ' << nrsecvmax << '\n';
+            
+            for(int i = 2; i <= n - 1; i ++){
+                if(lp[vec[i - 1]] == 0 and lp[vec[i]] == 1 and lp[vec[i + 1]] == 0){
+                    int j = i;
+                    int st = 0;
+                    int s;
+                    
+                    while(lp[vec[--j]] == 0 and j >= 1){
+                        st ++;
+                        s = j;
+                    }
+                    
+                    j = i;
+                    int dr = 0;
+                    int d;
+                    
+                    while(lp[vec[++j]] == 0 and j <= n){
+                        dr ++;
+                        d = j;
+                    }
+                    
+                    if(dr + st == secvmax){
+                        cout << s << ' ' << d << '\n';
+                    }
+                }
+            }
+        }
+    }
+
+    return 0;
+}
